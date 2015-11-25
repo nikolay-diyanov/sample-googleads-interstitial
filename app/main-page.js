@@ -1,4 +1,5 @@
 var vmModule = require("./main-view-model");
+var platformModule = require("platform");
 var interstitial;
 var page;
 
@@ -6,33 +7,40 @@ function pageLoaded(args) {
     page = args.object;
     page.bindingContext = vmModule.mainViewModel;
 
-	interstitial = createAndLoadInterstitial(); 
+    if(platformModule.device.os == "iOS") {
+	   interstitial = createAndLoadInterstitial(); 
+    }
+    else {}
 }
 
 function buttonTapped(args) {
-	if(interstitial.isReady) {
-		interstitial.presentFromRootViewController(page.ios);
-	}
+	if(platformModule.device.os == "iOS") {
+        if(interstitial.isReady) {
+            interstitial.presentFromRootViewController(page.ios);
+        }
+    }
 }
 
-var GADInterstitialDelegateImpl = (function (_super) {
-    __extends(GADInterstitialDelegateImpl, _super);
-    function GADInterstitialDelegateImpl() {
-        _super.apply(this, arguments);
-    }
-    GADInterstitialDelegateImpl.new = function () {
-        return _super.new.call(this);
-    };
-    GADInterstitialDelegateImpl.prototype.initWithOwner = function (owner) {
-        this._owner = owner;
-        return this;
-    };
-    GADInterstitialDelegateImpl.prototype.interstitialDidDismissScreen = function (gadinterstitial) {
-    	interstitial = createAndLoadInterstitial();
-    };
-    GADInterstitialDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
-    return GADInterstitialDelegateImpl;
-})(NSObject);
+if(platformModule.device.os == "iOS") {
+    var GADInterstitialDelegateImpl = (function (_super) {
+        __extends(GADInterstitialDelegateImpl, _super);
+        function GADInterstitialDelegateImpl() {
+            _super.apply(this, arguments);
+        }
+        GADInterstitialDelegateImpl.new = function () {
+            return _super.new.call(this);
+        };
+        GADInterstitialDelegateImpl.prototype.initWithOwner = function (owner) {
+            this._owner = owner;
+            return this;
+        };
+        GADInterstitialDelegateImpl.prototype.interstitialDidDismissScreen = function (gadinterstitial) {
+            interstitial = createAndLoadInterstitial();
+        };
+        GADInterstitialDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
+        return GADInterstitialDelegateImpl;
+    })(NSObject);
+}
 
 function createAndLoadInterstitial() {
 	var interstitial = GADInterstitial.alloc().initWithAdUnitID("ca-app-pub-3940256099942544/4411468910");
