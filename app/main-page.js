@@ -7,10 +7,31 @@ function pageLoaded(args) {
     page = args.object;
     page.bindingContext = vmModule.mainViewModel;
 
-    if(platformModule.device.os == "iOS") {
-	   interstitial = createAndLoadInterstitial(); 
-    }
-    else {}
+	if(platformModule.device.os == "iOS") {
+		interstitial = createAndLoadInterstitial(); 
+	}
+	else {		
+		interstitial = new com.google.android.gms.ads.InterstitialAd(page._context);
+		interstitial.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+		
+		var MyAdListener = com.google.android.gms.ads.AdListener.extend(
+		{
+			onAdClosed: function() {
+				loadAndroidInterstitial();
+			}
+		});		
+		var listener = new MyAdListener();		
+		interstitial.setAdListener(listener);
+
+		loadAndroidInterstitial();
+	}
+}
+
+function loadAndroidInterstitial() {
+	var adRequest = new com.google.android.gms.ads.AdRequest.Builder();
+	adRequest.addTestDevice(com.google.android.gms.ads.AdRequest.DEVICE_ID_EMULATOR);
+	var requestBuild = adRequest.build();			
+	interstitial.loadAd(requestBuild);
 }
 
 function buttonTapped(args) {
@@ -19,6 +40,11 @@ function buttonTapped(args) {
             interstitial.presentFromRootViewController(page.ios);
         }
     }
+	else {
+		if (interstitial.isLoaded()) {
+            interstitial.show();
+        }
+    } 
 }
 
 if(platformModule.device.os == "iOS") {
@@ -46,7 +72,7 @@ function createAndLoadInterstitial() {
 	var interstitial = GADInterstitial.alloc().initWithAdUnitID("ca-app-pub-3940256099942544/4411468910");
 	var request = GADRequest.request();
 	interstitial.strongDelegateRef = interstitial.delegate = GADInterstitialDelegateImpl.new().initWithOwner(this);
-    request.testDevices = [kGADSimulatorID];
+	request.testDevices = [kGADSimulatorID];
 	interstitial.loadRequest(request);
 
 	return interstitial;
@@ -55,6 +81,3 @@ function createAndLoadInterstitial() {
 exports.pageLoaded = pageLoaded;
 exports.buttonTapped = buttonTapped;
 exports.createAndLoadInterstitial = createAndLoadInterstitial;
-
-
-
