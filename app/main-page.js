@@ -18,6 +18,10 @@ function pageLoaded(args) {
 		{
 			onAdClosed: function() {
 				loadAndroidInterstitial();
+			},
+			onAdLeftApplication: function() {
+				// do sth as the user is leaving the app, because of a clicked ad
+				console.log("Leaving the app, bye bye!");
 			}
 		});		
 		var listener = new MyAdListener();		
