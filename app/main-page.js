@@ -4,8 +4,8 @@ var interstitial;
 var page;
 
 function pageLoaded(args) {
-    page = args.object;
-    page.bindingContext = vmModule.mainViewModel;
+	page = args.object;
+	page.bindingContext = vmModule.mainViewModel;
 
 	if(platformModule.device.os == platformModule.platformNames.ios) {
 		interstitial = createAndLoadInterstitial(); 
@@ -40,39 +40,39 @@ function loadAndroidInterstitial() {
 
 function buttonTapped(args) {
 	if(platformModule.device.os == "iOS") {
-        if(interstitial.isReady) {
-            interstitial.presentFromRootViewController(page.ios);
-        }
-    }
+		if(interstitial.isReady) {
+			interstitial.presentFromRootViewController(page.ios);
+		}
+	}
 	else {
 		if (interstitial.isLoaded()) {
-            interstitial.show();
-        }
-    } 
+			interstitial.show();
+		}
+	} 
 }
 
 if(platformModule.device.os == platformModule.platformNames.ios) {
-    var GADInterstitialDelegateImpl = (function (_super) {
-        __extends(GADInterstitialDelegateImpl, _super);
-        function GADInterstitialDelegateImpl() {
-            _super.apply(this, arguments);
-        }
-        GADInterstitialDelegateImpl.prototype.interstitialDidDismissScreen = function (gadinterstitial) {
-            interstitial = createAndLoadInterstitial();
-        };
-        GADInterstitialDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
-        return GADInterstitialDelegateImpl;
-    })(NSObject);
+	var GADInterstitialDelegateImpl = (function (_super) {
+		__extends(GADInterstitialDelegateImpl, _super);
+		function GADInterstitialDelegateImpl() {
+			_super.apply(this, arguments);
+		}
+		GADInterstitialDelegateImpl.prototype.interstitialDidDismissScreen = function (gadinterstitial) {
+			interstitial = createAndLoadInterstitial();
+		};
+		GADInterstitialDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
+		return GADInterstitialDelegateImpl;
+	})(NSObject);
 }
 
 function createAndLoadInterstitial() {
-	var interstitial = GADInterstitial.alloc().initWithAdUnitID("ca-app-pub-3940256099942544/4411468910");
+	var inters = GADInterstitial.alloc().initWithAdUnitID("ca-app-pub-3940256099942544/4411468910");
 	var request = GADRequest.request();
-	interstitial.strongDelegateRef = interstitial.delegate = GADInterstitialDelegateImpl.new();
+	inters.strongDelegateRef = inters.delegate = GADInterstitialDelegateImpl.new();
 	request.testDevices = [kGADSimulatorID];
-	interstitial.loadRequest(request);
+	inters.loadRequest(request);
 
-	return interstitial;
+	return inters;
 }
 
 exports.pageLoaded = pageLoaded;
