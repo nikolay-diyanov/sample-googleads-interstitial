@@ -1,10 +1,9 @@
 var vmModule = require("./main-view-model");
 var platformModule = require("platform");
 var interstitial;
-var page;
 
 function pageLoaded(args) {
-	page = args.object;
+	var page = args.object;
 	page.bindingContext = vmModule.mainViewModel;
 
 	if(platformModule.device.os == platformModule.platformNames.ios) {
@@ -39,9 +38,9 @@ function loadAndroidInterstitial() {
 }
 
 function buttonTapped(args) {
-	if(platformModule.device.os == "iOS") {
+	(platformModule.device.os == platformModule.platformNames.ios) {
 		if(interstitial.isReady) {
-			interstitial.presentFromRootViewController(page.ios);
+			interstitial.presentFromRootViewController(args.object.page.frame.ios.controller);
 		}
 	}
 	else {
