@@ -1,13 +1,15 @@
 var vmModule = require("./main-view-model");
 var platformModule = require("platform");
-var interstitial;
+var frameModule = require("ui/frame");
 
 function pageLoaded(args) {
 	var page = args.object;
 	page.bindingContext = vmModule.mainViewModel;
 
+	frameModule.topmost().currentPage.delegate = GADInterstitialDelegateImpl.new();
+
 	if(platformModule.device.os == platformModule.platformNames.ios) {
-		interstitial = createAndLoadInterstitial(); 
+		frameModule.topmost().currentPage.interstitial = createAndLoadInterstitial(); 
 	}
 	else {		
 		interstitial = new com.google.android.gms.ads.InterstitialAd(page._context);
@@ -38,7 +40,9 @@ function loadAndroidInterstitial() {
 }
 
 function buttonTapped(args) {
-	(platformModule.device.os == platformModule.platformNames.ios) {
+	var interstitial = frameModule.topmost().currentPage.interstitial;
+
+	if(platformModule.device.os == platformModule.platformNames.ios) {
 		if(interstitial.isReady) {
 			interstitial.presentFromRootViewController(args.object.page.frame.ios.controller);
 		}
@@ -57,7 +61,7 @@ if(platformModule.device.os == platformModule.platformNames.ios) {
 			_super.apply(this, arguments);
 		}
 		GADInterstitialDelegateImpl.prototype.interstitialDidDismissScreen = function (gadinterstitial) {
-			interstitial = createAndLoadInterstitial();
+			frameModule.topmost().currentPage.interstitial = createAndLoadInterstitial();
 		};
 		GADInterstitialDelegateImpl.ObjCProtocols = [GADInterstitialDelegate];
 		return GADInterstitialDelegateImpl;
@@ -65,13 +69,13 @@ if(platformModule.device.os == platformModule.platformNames.ios) {
 }
 
 function createAndLoadInterstitial() {
-	var inters = GADInterstitial.alloc().initWithAdUnitID("ca-app-pub-3940256099942544/4411468910");
+	var interstitial = GADInterstitial.alloc().initWithAdUnitID("ca-app-pub-3940256099942544/4411468910");
 	var request = GADRequest.request();
-	inters.strongDelegateRef = inters.delegate = GADInterstitialDelegateImpl.new();
+	interstitial.strongDelegateRef = interstitial.delegate = frameModule.topmost().currentPage.delegate;
 	request.testDevices = [kGADSimulatorID];
-	inters.loadRequest(request);
+	interstitial.loadRequest(request);
 
-	return inters;
+	return interstitial;
 }
 
 exports.pageLoaded = pageLoaded;
