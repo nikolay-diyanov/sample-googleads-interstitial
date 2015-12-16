@@ -4,7 +4,7 @@ Google Interstitial Ads app for NativeScript
 This project demonstrates how you can employ the Google Mobile Ads SDK to show interstitial ads in a [NativeScript framework](http://github.com/nativescript/nativescript) app. Thanks to the NativeScript ability to call native API using JavaScript, you can use any native library, just by adding a reference to that library and its documentation. For more information, please refer to the following blog articles:
 
 - [Monetize your NativeScript apps with AdMob (part 1 - iOS)](https://www.nativescript.org/blog/monetize-your-nativescript-apps-with-admob-(part-1---ios))
-
+- [Monetize your NativeScript apps with AdMob (part 2 - Android)](https://www.nativescript.org/blog/monetize-your-nativescript-apps-with-admob-(part-2---android))
 
 The improved version of that project which implies how to create modules can be found at [this repo](https://github.com/nikolay-diyanov/sample-googleads-interstitial-mod).
 

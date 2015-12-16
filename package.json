@@ -5,11 +5,11 @@
 			"version": "1.5.0"
 		},
 		"tns-android": {
-			"version": "1.5.0"
+			"version": "1.5.1"
 		}
 	},
 	"dependencies": {
-		"nativescript-google-mobile-ads-sdk": "^1.0.3",
+		"nativescript-google-mobile-ads-sdk": "^1.0.5",
 		"tns-core-modules": "1.5.0"
 	}
 }
